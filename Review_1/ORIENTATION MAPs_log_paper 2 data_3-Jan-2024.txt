@@ -1,0 +1,511 @@
+
+
+
+*********************************sRGB parameters (first submission)******************************
+
+---------stack_spectra_leica_v16_algorithm3.m----------------
+
+%sRGB
+%quartz [138; 138];. %384D22_5x
+%biotite [75; 75];.
+%feldspar [100; 100];.
+%albite [140; 140];. 
+
+%quartz [135; 135];. 384D22_10x.
+%albite [100; 100];.
+
+%biotite [85; 85];. 6KB-67
+%plagioclase [100; 100];.
+%garnet [3; 3];. 
+%amphibole [80; 80];.
+
+%garnet [12; 12];. TS-J2KB
+%quartz [170; 170];. 
+%biotite [160; 160];.
+
+---------stack_spectra_leica_v15_rgb_test.m----------
+
+%Sample processing metadata:
+%olivine [120; 120];. 17-BSK-035 
+%opx [140, 140];.
+
+%olivine [140, 140];. 17-BSK-062-02
+%opx [140, 140];. 
+
+%olivine [120, 120];. 17-BSK-062-03
+
+*********************************linearised parameters (second submission)******************************
+
+
+mineralSel = 1; 
+Imax_vector = [120; 120]; %olivine in 062-02
+mineralSel = 3; 
+Imax_vector = [135; 135]; %opx in 062-02
+
+mineralSel = 1;
+Imax_vector = [100; 100]; %olivine in 062-03
+
+mineralSel = 2; 
+Imax_vector = [127.5; 127.5]; %quartz in mylonite at 5X
+mineralSel = 4; %
+Imax_vector = [100; 100]; %K-feldspar in mylonite at 5X
+
+quartz [125; 125]; %384D22_10x.
+
+garnet [1; 1]; %6KB-67
+plagioclase [1; 1]; %6KB-67
+
+mineralSel = 5; % garnet in schist
+Imax_vector = [3.5; 3.5]; %TS-J2KB
+mineralSel = 2; %quartz in schist
+Imax_vector = [210; 210]; %TS-J2KB
+mineralSel = 6; %biotite in schist
+Imax_vector = [180; 180]; %TS-J2KB
+
+---------computing time 7-jan-2024 --------
+
+SCHIST = 3377x2400
+    FittedImage: 9.3214
+           Rate: 241.5222
+
+granite mylonite = 1931x2189
+ FittedImage: 4.0805
+           Rate: 287.7456
+
+HARZBURGITE 062-02 = 1620x1622
+FittedImage: 1.9826
+           Rate: 368.1495
+
+HARZBURGITE 062-02 = 1620x1620
+ FittedImage: 1.9465
+           Rate: 374.5233
+
+
+---------granite mylonite quartz at 5X----------
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\final stacks';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1'; %SuperSIAT input
+fileName_spf = 'sample2.spf'; %SuperSIAT training points
+fileName_shp = 'sample2_segmentation.shp'; %objects
+destDir_suffix = 'linear';%saving directory (change to avoid overwriting)
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = .4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+%plotSetup.lineWidth = 0.6; %mylonite and garnet
+%plotSetup.autoSFactor = 0.4; %mylonite and garnet
+%plotSetup.edgeAlpha = 1; %coarse grained mineral
+
+%Define: Multi-pol imaging spectra
+sel_modality = {...
+    'RL PPL', 'RL XPL', ...
+    'TL PPL', 'TL XPL', 'TL XPL-lambda'}; %acquired series
+rlPPL_range = 1:36; 
+rlXPL_range = 37:72;
+tlPPL_range = 73:108;
+tlXPL_range = 109:144;
+tlXPLlambda_range = 145:180;
+%Note: fitting a Fourier-2 model requires at least 6 data points
+
+%Define ray tracing
+% {'mean', 'max', 'min', 'range', 'sum', 'std', 'median', 'maxHSV', 'minHSV', 'rangeHSV'}
+stats_list = {'max', 'min'};
+
+%Define image blending
+type = {'max'}; %used ray tracing method
+
+%Mylonite
+modality = {'RL PPL', 'TL PPL', 'TL XPL', ...
+    'rescaled8_pca_25april_pctOut0.5_denoised3x3_registered'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+weights = [15, 20, 20, 45];
+% %Every sample (not the harzburgites)
+% modality = {'RL PPL', 'TL PPL', 'TL XPL'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+% weights = [50, 25, 25];
+
+%Define Algorithm 1
+pol_angle1 = [ 0:10:350 ]'; % experiment range (transposed to match sequezeed px)
+period_modality = [180, 90, 180, 90, 180]; % optical_period; XPL=90, PPL=180
+sel = 5; %select idx of 'TL-XPL-lambda' modality 
+scale = 0.5; % Decreases computational cost
+cluster = 10; %logical processors >8 crashed 32GB (dont forget to turn off debugging plots!)
+
+importType_loop = 1; %greyscale = 1; rgb = 2
+n_RGB = 1;
+% sel_channel = [1, 2, 3]; %separate the channels
+% n_RGB = length(sel_channel);
+
+%Saving file name of Algorithms 1 & 2 loop
+descripTxt = {'6-Jan-24'}; %name of modulation image file
+% descripTxt = strcat({'R', 'G', 'B'}, '_'); %when looping each RGB channel
+
+%Define POAM maps
+mappingAlgorithm = 3; %3= Algorihtm 3; 4= Algorithm 4
+obias_folderName = 'obiasExport';
+
+---------granite mylonite at quartz 10X----------
+
+%Dataset definition
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\zoom-in registeredStacks';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1'; %SuperSIAT input
+fileName_spf = 'sample2.spf'; %SuperSIAT training points
+fileName_shp = 'sample2_segmentation.shp'; %objects
+destDir_suffix = 'linear';%saving directory (change to avoid overwriting)
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = .4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+%plotSetup.lineWidth = 0.6; %mylonite and garnet
+%plotSetup.autoSFactor = 0.4; %mylonite and garnet
+%plotSetup.edgeAlpha = 1; %coarse grained mineral
+
+%Define: Multi-pol imaging spectra
+sel_modality = {...
+    'RL PPL', 'RL XPL', ...
+    'TL PPL', 'TL XPL', 'TL XPL-lambda'}; %acquired series
+rlPPL_range = 1:36; 
+rlXPL_range = 37:72;
+tlPPL_range = 73:108;
+tlXPL_range = 109:144;
+tlXPLlambda_range = 145:180;
+%Note: fitting a Fourier-2 model requires at least 6 data points
+
+%Define ray tracing
+% {'mean', 'max', 'min', 'range', 'sum', 'std', 'median', 'maxHSV', 'minHSV', 'rangeHSV'}
+stats_list = {'max', 'min'};
+
+%Define image blending
+type = {'max'}; %used ray tracing method
+
+%Mylonite
+modality = {'RL PPL', 'TL PPL', 'TL XPL', ...
+    'rescaled8_pca_25april_pctOut0.5_denoised3x3_registered'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+weights = [15, 20, 20, 45];
+% %Every sample (not the harzburgites)
+% modality = {'RL PPL', 'TL PPL', 'TL XPL'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+% weights = [50, 25, 25];
+
+%Define Algorithm 1
+pol_angle1 = [ 0:10:350 ]'; % experiment range (transposed to match sequezeed px)
+period_modality = [180, 90, 180, 90, 180]; % optical_period; XPL=90, PPL=180
+sel = 5; %select idx of 'TL-XPL-lambda' modality 
+scale = 0.5; % Decreases computational cost
+cluster = 10; %logical processors >8 crashed 32GB (dont forget to turn off debugging plots!)
+
+importType_loop = 1; %greyscale = 1; rgb = 2
+n_RGB = 1;
+% sel_channel = [1, 2, 3]; %separate the channels
+% n_RGB = length(sel_channel);
+
+%Saving file name of Algorithms 1 & 2 loop
+descripTxt = {'30Dec23'}; %name of modulation image file
+% descripTxt = strcat({'R', 'G', 'B'}, '_'); %when looping each RGB channel
+
+%Define POAM maps
+mappingAlgorithm = 3; %3= Algorihtm 3; 4= Algorithm 4
+obias_folderName = 'obiasExport';
+
+
+-----------harburgite basement mylonite 17-bsk-035 at 5X--------------
+
+%Dataset definition
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\17BSK035\stacks_save\composite_trial4';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1_W5000'; %SuperSIAT input
+fileName_spf = 'sample7.spf'; %SuperSIAT training points
+fileName_shp = 'sample7_segmentation.shp'; %objects
+destDir_suffix = 'test_4Jan2024_2';%trial saving directory
+plotSetup = struct;
+plotSetup.lineWidth = 0.001; %vector thickness
+plotSetup.autoSFactor = .2; %quiver vectors size
+plotSetup.edgeAlpha = 0; %edge transparency
+
+%Define: Multi-pol imaging spectra
+sel_modality = {...
+    'RL PPL', 'RL XPL', ...
+    'TL PPL', 'TL XPL', 'TL XPL-lambda'}; %acquired series
+rlPPL_range = 1:2;
+rlXPL_range = 3:4;
+tlPPL_range = 5:6;
+tlXPL_range = 7:8;
+tlXPLlambda_range = 9:44;
+%Note: fitting a Fourier-2 model requires at least 6 data points
+
+%Define ray tracing
+% {'mean', 'max', 'min', 'range', 'sum', 'std', 'median', 'maxHSV', 'minHSV', 'rangeHSV'}
+stats_list = {'max', 'min'};
+
+%Define image blending
+type = {'max'}; %used ray tracing method
+
+%Harzburgites (02 and 03)
+modality = {'RL PPL', 'TL PPL', 'TL XPL'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+weights = [50, 25, 25];
+
+%Define Algorithm 1
+pol_angle1 = [ 0:10:350 ]'; % experiment range (transposed to match sequezeed px)
+period_modality = [180, 90, 180, 90, 180]; % optical_period; XPL=90, PPL=180
+sel = 5; %select idx of 'TL-XPL-lambda' modality 
+scale = 0.5; % Decreases computational cost
+cluster = 10; %logical processors >8 crashed 32GB (dont forget to turn off debugging plots!)
+
+importType_loop = 1; %greyscale = 1; rgb = 2
+n_RGB = 1;
+% sel_channel = [1, 2, 3]; %separate the channels
+% n_RGB = length(sel_channel);
+
+%Saving file name of Algorithms 1 & 2 loop
+descripTxt = {''}; %name of modulation image file
+% descripTxt = strcat({'R', 'G', 'B'}, '_'); %when looping each RGB channel
+
+%Define POAM maps
+mappingAlgorithm = 4; %3= Algorihtm 3; 4= Algorithm 4
+fileName_equation = 'EQst_CieLAB_17-BSK-035.m';
+obias_folderName = 'obiasExport';
+
+----------harzburgite 062-02 at 5X-----------------
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\harzburgites Carl\02\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test2'; %SuperSIAT input
+fileName_spf = 'sample7.spf'; %SuperSIAT training points
+fileName_shp = 'sample7_segmentation.shp'; %objects
+destDir_suffix = 'linear';%saving directory (change to avoid overwriting)
+plotSetup = struct;
+plotSetup.lineWidth = 0.05;
+plotSetup.autoSFactor = .5;
+plotSetup.edgeAlpha = 0;
+
+%plotSetup.lineWidth = 0.6; %mylonite and garnet
+%plotSetup.autoSFactor = 0.4; %mylonite and garnet
+%plotSetup.edgeAlpha = 1; %coarse grained mineral
+
+%Define: Multi-pol imaging spectra
+sel_modality = {...
+    'RL PPL', 'RL XPL', ...
+    'TL PPL', 'TL XPL', 'TL XPL-lambda'}; %acquired series
+rlPPL_range = 1:36; 
+rlXPL_range = 37:72;
+tlPPL_range = 73:108;
+tlXPL_range = 109:144;
+tlXPLlambda_range = 145:180;
+%Note: fitting a Fourier-2 model requires at least 6 data points
+
+%Define ray tracing
+% {'mean', 'max', 'min', 'range', 'sum', 'std', 'median', 'maxHSV', 'minHSV', 'rangeHSV'}
+stats_list = {'max', 'min'};
+
+%Define image blending
+type = {'max'}; %used ray tracing method
+
+% %Mylonite
+% modality = {'RL PPL', 'TL PPL', 'TL XPL', ...
+%     'rescaled8_pca_25april_pctOut0.5_denoised3x3_registered'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+% weights = [15, 20, 20, 45];
+%Every sample (not the harzburgites)
+modality = {'RL PPL', 'TL PPL', 'TL XPL'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+weights = [50, 25, 25];
+
+%Define Algorithm 1
+pol_angle1 = [ 0:10:350 ]'; % experiment range (transposed to match sequezeed px)
+period_modality = [180, 90, 180, 90, 180]; % optical_period; XPL=90, PPL=180
+sel = 5; %select idx of 'TL-XPL-lambda' modality 
+scale = 0.5; % Decreases computational cost
+cluster = 10; %logical processors >8 crashed 32GB (dont forget to turn off debugging plots!)
+
+importType_loop = 1; %greyscale = 1; rgb = 2
+n_RGB = 1;
+% sel_channel = [1, 2, 3]; %separate the channels
+% n_RGB = length(sel_channel);
+
+%Saving file name of Algorithms 1 & 2 loop
+descripTxt = {'6-Jan-24'}; %name of modulation image file
+% descripTxt = strcat({'R', 'G', 'B'}, '_'); %when looping each RGB channel
+
+%Define POAM maps
+mappingAlgorithm = 4; %3= Algorihtm 3; 4= Algorithm 4
+fileName_equation = 'EQst_CieLAB_17-BSK-062-02_linearised.m';
+obias_folderName = 'obiasExport';
+
+--------------harzburgite 062-03 at 5X------------
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\harzburgites Carl\03\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test2'; %SuperSIAT input
+fileName_spf = 'sample6.spf'; %SuperSIAT training points
+fileName_shp = 'sample6_segmentation.shp'; %objects
+destDir_suffix = 'linear';%saving directory (change to avoid overwriting)
+plotSetup = struct;
+plotSetup.lineWidth = 0.05;
+plotSetup.autoSFactor = .5;
+plotSetup.edgeAlpha = 0;
+
+%plotSetup.lineWidth = 0.6; %mylonite and garnet
+%plotSetup.autoSFactor = 0.4; %mylonite and garnet
+%plotSetup.edgeAlpha = 1; %coarse grained mineral
+
+%Define: Multi-pol imaging spectra
+sel_modality = {...
+    'RL PPL', 'RL XPL', ...
+    'TL PPL', 'TL XPL', 'TL XPL-lambda'}; %acquired series
+rlPPL_range = 1:36; 
+rlXPL_range = 37:72;
+tlPPL_range = 73:108;
+tlXPL_range = 109:144;
+tlXPLlambda_range = 145:180;
+%Note: fitting a Fourier-2 model requires at least 6 data points
+
+%Define ray tracing
+% {'mean', 'max', 'min', 'range', 'sum', 'std', 'median', 'maxHSV', 'minHSV', 'rangeHSV'}
+stats_list = {'max', 'min'};
+
+%Define image blending
+type = {'max'}; %used ray tracing method
+
+% %Mylonite
+% modality = {'RL PPL', 'TL PPL', 'TL XPL', ...
+%     'rescaled8_pca_25april_pctOut0.5_denoised3x3_registered'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+% weights = [15, 20, 20, 45];
+%Every sample (not the harzburgites)
+modality = {'RL PPL', 'TL PPL', 'TL XPL'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+weights = [50, 25, 25];
+
+%Define Algorithm 1
+pol_angle1 = [ 0:10:350 ]'; % experiment range (transposed to match sequezeed px)
+period_modality = [180, 90, 180, 90, 180]; % optical_period; XPL=90, PPL=180
+sel = 5; %select idx of 'TL-XPL-lambda' modality 
+scale = 0.5; % Decreases computational cost
+cluster = 10; %logical processors >8 crashed 32GB (dont forget to turn off debugging plots!)
+
+importType_loop = 1; %greyscale = 1; rgb = 2
+n_RGB = 1;
+% sel_channel = [1, 2, 3]; %separate the channels
+% n_RGB = length(sel_channel);
+
+%Saving file name of Algorithms 1 & 2 loop
+descripTxt = {'6-Jan-24'}; %name of modulation image file
+% descripTxt = strcat({'R', 'G', 'B'}, '_'); %when looping each RGB channel
+
+%Define POAM maps
+mappingAlgorithm = 4; %3= Algorihtm 3; 4= Algorithm 4
+fileName_equation = 'EQst_CieLAB_17-BSK-062-03_linearised.m'; %_linearised
+obias_folderName = 'obiasExport';
+
+---------garnet amphibolite 6kb-67 at 5X-------------
+
+%Dataset definition
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\granulite 6KB-67\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1'; %SuperSIAT input
+fileName_spf = 'sample6.spf'; %SuperSIAT training points
+fileName_shp = 'sample6_segmentation.shp'; %objects
+destDir_suffix = '5Jan2024_1';%trial saving directory
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = 0.4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+%Define: Multi-pol imaging spectra
+sel_modality = {...
+    'RL PPL', 'RL XPL', ...
+    'TL PPL', 'TL XPL', 'TL XPL-lambda'}; %acquired series
+rlPPL_range = 1:36;
+rlXPL_range = 37:72;
+tlPPL_range = 73:108; 
+tlXPL_range = 109:144; 
+tlXPLlambda_range = 145:180;
+%Note: fitting a Fourier-2 model requires at least 6 data points
+
+%Define ray tracing
+% {'mean', 'max', 'min', 'range', 'sum', 'std', 'median', 'maxHSV', 'minHSV', 'rangeHSV'}
+stats_list = {'max', 'min'};
+
+%Define image blending
+type = {'max'}; %used ray tracing method
+
+%Harzburgites (02 and 03)
+modality = {'RL PPL', 'TL PPL', 'TL XPL'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+weights = [50, 25, 25];
+
+%Define Algorithm 1
+pol_angle1 = [ 0:10:350 ]'; % experiment range (transposed to match sequezeed px)
+period_modality = [180, 90, 180, 90, 180]; % optical_period; XPL=90, PPL=180
+sel = 5; %select idx of 'TL-XPL-lambda' modality 
+scale = 0.5; % Decreases computational cost
+cluster = 14; %logical processors >8 crashed 32GB (dont forget to turn off debugging plots!)
+
+importType_loop = 1; %greyscale = 1; rgb = 2
+n_RGB = 1;
+% sel_channel = [1, 2, 3]; %separate the channels
+% n_RGB = length(sel_channel);
+
+%Saving file name of Algorithms 1 & 2 loop
+descripTxt = {''}; %name of modulation image file
+% descripTxt = strcat({'R', 'G', 'B'}, '_'); %when looping each RGB channel
+
+%Define POAM maps
+mappingAlgorithm = 3; %3= Algorihtm 3; 4= Algorithm 4
+obias_folderName = 'obiasExport';
+
+
+---------garnet schist TS-J2KB at 5X-----------
+
+%Dataset definition
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\TS-J2KB\stacks\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1_H5000'; %SuperSIAT input
+fileName_spf = 'sample6.spf'; %SuperSIAT training points
+fileName_shp = 'sample6_segmentation.shp'; %objects
+destDir_suffix = '5Jan2024_1';%trial saving directory
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = 0.4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+%Define: Multi-pol imaging spectra
+sel_modality = {...
+    'RL PPL', 'RL XPL', ...
+    'TL PPL', 'TL XPL', 'TL XPL-lambda'}; %acquired series
+rlPPL_range = 1:36;
+rlXPL_range = 37:72;
+tlPPL_range = 73:108; 
+tlXPL_range = 109:144; 
+tlXPLlambda_range = 145:180;
+%Note: fitting a Fourier-2 model requires at least 6 data points
+
+%Define ray tracing
+% {'mean', 'max', 'min', 'range', 'sum', 'std', 'median', 'maxHSV', 'minHSV', 'rangeHSV'}
+stats_list = {'max', 'min'};
+
+%Define image blending
+type = {'max'}; %used ray tracing method
+
+%Harzburgites (02 and 03)
+modality = {'RL PPL', 'TL PPL', 'TL XPL'}; %'RL XPL', 'TL PPL', 'TL XPL-lambda'
+weights = [50, 25, 25];
+
+%Define Algorithm 1
+pol_angle1 = [ 0:10:350 ]'; % experiment range (transposed to match sequezeed px)
+period_modality = [180, 90, 180, 90, 180]; % optical_period; XPL=90, PPL=180
+sel = 5; %select idx of 'TL-XPL-lambda' modality 
+scale = 0.5; % Decreases computational cost
+cluster = 14; %logical processors >8 crashed 32GB (dont forget to turn off debugging plots!)
+
+importType_loop = 1; %greyscale = 1; rgb = 2
+n_RGB = 1;
+% sel_channel = [1, 2, 3]; %separate the channels
+% n_RGB = length(sel_channel);
+
+%Saving file name of Algorithms 1 & 2 loop
+descripTxt = {''}; %name of modulation image file
+% descripTxt = strcat({'R', 'G', 'B'}, '_'); %when looping each RGB channel
+
+%Define POAM maps
+mappingAlgorithm = 3; %3= Algorihtm 3; 4= Algorithm 4
+obias_folderName = 'obiasExport';
+
+-----------------
+

@@ -1,0 +1,197 @@
+
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\TS-J2KB\stacks\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1_H5000'; %SuperSIAT input
+fileName_spf = 'sample6.spf'; %SuperSIAT training points
+fileName_shp = 'sample6_segmentation.shp'; %objects
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = .4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+=======================================================================
+
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\granulite 6KB-67\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1'; %SuperSIAT input
+fileName_spf = 'sample6.spf'; %SuperSIAT training points
+fileName_shp = 'sample6_segmentation.shp'; %objects
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = .4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+
+=======================================================================
+
+
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\harzburgites Carl\02\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test2'; %SuperSIAT input
+fileName_spf = 'sample7.spf'; %SuperSIAT training points
+fileName_shp = 'sample7_segmentation.shp'; %objects
+plotSetup = struct;
+plotSetup.lineWidth = 0.05;
+plotSetup.autoSFactor = .5;
+plotSetup.edgeAlpha = 0;
+
+=======================================================================
+
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\harzburgites Carl\03\composite';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test2'; %SuperSIAT input
+fileName_spf = 'sample6.spf'; %SuperSIAT training points
+fileName_shp = 'sample6_segmentation.shp'; %objects
+plotSetup = struct;
+plotSetup.lineWidth = 0.05;
+plotSetup.autoSFactor = .5;
+plotSetup.edgeAlpha = 0;
+=======================================================================
+
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\17BSK035\stacks_save\composite_trial4';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1_W5000'; %SuperSIAT input
+fileName_spf = 'sample5.spf'; %SuperSIAT training points
+fileName_shp = 'sample5_segmentation.shp'; %objects
+plotSetup = struct;
+plotSetup.lineWidth = 0.001; %vector thickness
+plotSetup.autoSFactor = .2; %quiver vectors size
+plotSetup.edgeAlpha = 0; %edge transparency
+
+
+rlPPL_range = 1:2; %2:7
+rlXPL_range = 3:4; %8:19
+tlPPL_range = 5:6; %20:25
+tlXPL_range = 7:8; %26:n_list
+tlXPLlambda_range = 9:44;
+
+=======================================================================
+
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\final stacks';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1'; %SuperSIAT input
+fileName_spf = 'sample2.spf'; %SuperSIAT training points
+fileName_shp = 'sample2_segmentation.shp'; %objects
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = .4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+%Mylonite 5X
+matched_EBSD = [402, 407, 369, 446, 230, 210, 234, 325];
+matched_coordinates = [
+    2139.14	1687.27; 
+    2227.7	1729.91;
+    2331.38	1761.37;
+    2404.69	1676.02;
+    2399.89	1816.85;
+    2351.04	1852.98;
+    2243.14	1842.83;
+    2168.26	1752.09];
+
+
+=======================================================================
+
+
+workingDir = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\zoom-in registeredStacks';
+fileName = 'all_modalities.tif'; %TrakEM2 image stack
+blendedImage_suffix = 'test1'; %SuperSIAT input
+fileName_spf = 'sample2.spf'; %SuperSIAT training points
+fileName_shp = 'sample2_segmentation.shp'; %objects
+plotSetup = struct;
+plotSetup.lineWidth = 0.6; %vector thickness
+plotSetup.autoSFactor = .4; %quiver vectors size
+plotSetup.edgeAlpha = 1; %edge transparency
+
+%mylonite 10X
+matched_EBSD = [407, 230, 74, 210, 234, 446, 268, 369];
+matched_coordinates = [
+    610.623, 984.149;
+    974.507, 1170.25;
+    628.073, 1307.14;
+    803.882, 1300.01;
+    653.647, 1214.08;
+    976.897, 896.574;
+    501.776, 1153.44;
+    833.484, 1057.95;    
+];
+
+===========Data processing notes: 1==============
+
+
+
+%Specify for each mineral (watch TL-XPL-lambda stack in Fiji):
+
+%Fixing quartz
+%Real data (optical spectra): [35, 225; 35, 225]; 
+%Real data (ebsd): <43 (vertical); <162 (horizontal)
+%best match 1 (closer to 1:1): [30, 195; 30, 190]; 
+%best match 2: [25, 210; 25, 205]; 
+
+%quartz [30, 195; 30, 190]; %384D22_5x
+%biotite [10, 105; 10, 105];
+%feldspar [50, 160; 50, 160];
+%albite [40, 220; 40, 220]; 
+
+%quartz [30, 185; 30, 184]; 384D22_10x.
+%K-feldspar [2, 6; 2, 6]; 
+%albite [30, 150; 30, 150];
+
+%biotite [10, 90; 10, 90]; 6KB-67.
+%plagioclase [30, 165; 30, 165];
+%garnet [15, 58; 15, 58]; 
+%amphibole [10, 100; 10, 100];
+
+%garnet [40, 82; 40, 82]; TS-J2KB.
+%quartz [25, 245; 25, 245]; 
+%biotite [30, 240; 30, 240];
+
+%olivine [50, 220; 50, 220]; 17-BSK-062-02.
+%opx [50, 200; 50, 200]; 
+
+%olivine [50, 220; 50, 220]; 17-BSK-062-03.
+%opx [50, 200; 50, 200];
+
+%olivine [50, 220; 50, 220]; 17-BSK-035 
+%opx [70, 245; 70, 245]; 
+
+
+===========Data processing notes: 2==============
+
+----------------------%stack_spectra_leica_v14.m
+
+%Sample processing:
+%olivine [120; 120];. 17-BSK-035 
+%opx [140, 140];.
+
+%olivine [140, 140];. 17-BSK-062-02
+%opx [140, 140];. 
+
+%olivine [120, 120];. 17-BSK-062-03
+
+
+---------------------%stack_spectra_leica_v13_local.m
+
+%Sample processing:
+%quartz [138; 138];. %384D22_5x
+%biotite [75; 75];.
+%feldspar [100; 100];.
+%albite [140; 140];. 
+
+%quartz [135; 135];. 384D22_10x.
+%albite [100; 100];.
+
+%biotite [85; 85];. 6KB-67
+%plagioclase [100; 100];.
+%garnet [3; 3];. 
+%amphibole [80; 80];.
+
+%garnet [12; 12];. TS-J2KB
+%quartz [170; 170];. 
+%biotite [160; 160];.
