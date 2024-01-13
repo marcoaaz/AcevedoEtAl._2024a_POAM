@@ -1,2 +1,34 @@
 # AcevedoEtAl._2024a_POAM
-Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM)
+
+This repository contains an open-source image analysis pipeline to convert a traditional petrographic (polarising) microscope into a micro-fabric analyser using internal and external software modules. The software is widely documented in Supplementary Material 1 of the submitted manuscript:
+
+Acevedo Zamora, M. A.; Schrank, C. E.; Kamber, B. S. Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM). Journal of Microscopy in revision.
+
+The workflow is organised as follows (the main MatLab script 'stack_spectra_leica_v18.m' corresponds to blue panels):
+![Figure 2_Summary of the image analysis pipeline_v2](https://github.com/marcoaaz/AcevedoEtAl._2024a_POAM/assets/61703106/74f43cd2-57df-469f-ac9d-58fe6823a42f)
+
+The dependencies are (updated up to *_v14.m):
+![Supp  Mat  3 Figure S1_MatLab code dependencies](https://github.com/marcoaaz/AcevedoEtAl._2024a_POAM/assets/61703106/5f52711b-aeb7-4e63-82cf-cc703caad5ff)
+
+The scripts and functions documentation is listed below (preliminary descriptions, updated 13-Jan-2024):
+
+1. EBSD validation
+  +	readEBSD_h5oiana_v5.m = Uses MTEX to plot EBSD map of harzburgite showing enstatite grains with spectral transmission
+  +	enstatite_model.m = Uses MTEX to plot the default enstatite 3D crystal model with crystallographic and optic axes
+  +	validateBiaxialAzimuth.m = compare biaxial mineral slow-axis azimuth between POAM and MTEX Birefringence package (Sorensen review)
+  +	validateUniaxialAzimuth.m = compare uniaxial mineral optic-axis azimuth between POAM and MTEX Birefringence package (first paper 2 submission)
+2. fix_algorithm1_v2.m = Following Axer et al. 2011 paper for obtaining coefficients
+  +	imageFourierS_optim_ver2.m = matricial implementation of algorithm 1
+  +	sinDescriptor_ver3.m = function with boosted performance using algorithm 1 Function handles as input to algorithm 2
+3. ROI Tool (multipol)
+  + ROI_modulation_data.m = function with updated to work with pixelFourierS_ver2.m
+  + pixelFourierS_ver2.m = update of Algorithm 1 for faster computation using Fourier series coefficients (without fitting a Fourier2)
++ highestOrderPeak_ver2.m = 10x improved performance using function handles
++ stack_spectra_leica_v17.m = update incorporating all other updates and supporting algorithms 3 and 4 as a switch/case.
+  - stack_spectra_leica_v15_algorithm3.m = update to allow pixelFourierS_ver2.m vectorised
+  - stack_spectra_leica_v16_algorithm3.m = TRIAL only. update to avoid running algorithm 1
+  - Improvements:
+    -	sinDescriptorPlot_ver2.m = function with updated input list
+    -	stackImportLoop.m = function to use imread() import loop of selected variable range from the image stack. The sRGB images are linearised. Two output options are available: greyscale stack (3D) or RGB stack (4D). The output is rescaled following a scalar value (downscaling speeds up POAM). 
+    -	imgCropAndOverlay.m = function to obtain POAM maps common bounding box and provide an aesthetic image overlay to be plotted below the orientation map and objects.
+    -	rearrangePeakImages.m = uses 'img_closest*.tif to rearrange the peak images (algorithm 4)
