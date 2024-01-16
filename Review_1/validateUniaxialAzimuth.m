@@ -9,9 +9,9 @@ ebsd_ori = readtable('E:\paper 2_datasets\nikon LV1000ND\mylonite\zoom-in regist
 
 %POAM orientation quiver map centroids (after OBIAS)
 %10X
-% poamFile = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\zoom-in registeredStacks\all_modalities_rayTracing\obiasExport_linear_0.5_review3\30Dec23_modulationImage_TL XPL-lambda_0.5_objNet_quartz_centroidAndVector2.csv';
+% poamFile = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\zoom-in registeredStacks\all_modalities_rayTracing\obiasExport_linear_0.5_linear\30Dec23_modulationImage_TL XPL-lambda_0.5_objNet_quartz_centroidAndVector_10X.csv';
 %5X
-poamFile = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\final stacks\all_modalities_rayTracing\obiasExport_0.5_linear\6-Jan-24modulationImage_TL XPL-lambda_0.5_objNet_quartz_centroidAndVector.csv';
+poamFile = 'E:\paper 2_datasets\nikon LV1000ND\mylonite\final stacks\all_modalities_rayTracing\obiasExport_0.5_linear\6-Jan-24modulationImage_TL XPL-lambda_0.5_objNet_quartz_centroidAndVector_5X.csv';
 
 % %10X
 % matched_EBSD = [407, 230, 74, 210, 234, 446, 268, 369];
