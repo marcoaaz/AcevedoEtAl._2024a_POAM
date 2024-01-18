@@ -6,7 +6,7 @@ This repository contains an open-source image analysis pipeline to convert a tra
 
 **Acevedo Zamora, M. A.; Schrank, C. E.; Kamber, B. S. Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM). ***Journal of Microscopy in revision.*****
 
-### Workflow
+## Workflow
 
 The workflow is organised as follows (the main MatLab script 'stack_spectra_leica_v18.m' corresponds to blue panels):
 
@@ -39,9 +39,6 @@ The scripts and functions documentation are listed below (preliminary descriptio
     -	imgCropAndOverlay.m = function to obtain POAM maps common bounding box and provide an aesthetic image overlay to be plotted below the orientation map and objects.
     -	rearrangePeakImages.m = uses 'img_closest*.tif to rearrange the peak images (algorithm 4)
 
-
-In future updates, we expect to increase the efficiency of Algorithm 2 and provide explanatory videos for new users who would like to learn to acquire their images (microscope stage rotation and capturing) and manage the files for effectively use POAM.
-
 To be able to run the scripts, you require installing:
 
   +	MATLAB Version: 9.14.0.2239454 (R2023a) Update 1
@@ -64,6 +61,9 @@ To be able to run the scripts, you require installing:
   + Symbolic Math Toolbox, Version 9.3
   + Wavelet Toolbox, Version 6.3
 
+## Future Updates
+
+We expect to increase the efficiency of Algorithm 2 and provide explanatory videos for new users who would like to learn to acquire their images (microscope stage rotation and capturing) and manage the files for effectively use POAM. Feel free to contact me for scientific collaboration.
 
 Thanks.
 :) 
