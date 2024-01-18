@@ -40,12 +40,13 @@ In future updates, we expect to increase the efficiency of Algorithm 2 and provi
 
 To be able to run the scripts, you require installing:
 
-The used MatLab version was:
   +	MATLAB Version: 9.14.0.2239454 (R2023a) Update 1
   +	MATLAB License Number: 729365
   +	Operating System: Microsoft Windows 10 Enterprise Version 10.0 (Build 19045)
   +	Java Version: Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+
 , with toolboxes:
+
   +	Computer Vision Toolbox, Version 10.4
   +	Curve Fitting Toolbox, Version 3.9
   +	Deep Learning Toolbox, Version 14.6
