@@ -1,16 +1,20 @@
 # AcevedoEtAl._2024a_POAM
 
+## Description
+
 This repository contains an open-source image analysis pipeline to convert a traditional petrographic (polarising) microscope into a micro-fabric analyser using internal and external software modules. The software is widely documented in Supplementary Material 1 of the submitted manuscript:
 
-Acevedo Zamora, M. A.; Schrank, C. E.; Kamber, B. S. Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM). Journal of Microscopy in revision.
+**Acevedo Zamora, M. A.; Schrank, C. E.; Kamber, B. S. Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM). ***Journal of Microscopy in revision.**** **
+
+### Workflow
 
 The workflow is organised as follows (the main MatLab script 'stack_spectra_leica_v18.m' corresponds to blue panels):
 
-<img src="https://github.com/marcoaaz/AcevedoEtAl._2024a_POAM/assets/61703106/74f43cd2-57df-469f-ac9d-58fe6823a42f" width=60% height=60%>
+<img src="https://github.com/marcoaaz/AcevedoEtAl._2024a_POAM/assets/61703106/74f43cd2-57df-469f-ac9d-58fe6823a42f" width=60% height=80%>
 
 The POAM dependencies are (updated up to *_v14.m):
 
-<img src="https://github.com/marcoaaz/AcevedoEtAl._2024a_POAM/assets/61703106/5f52711b-aeb7-4e63-82cf-cc703caad5ff" width=60% height=60%>
+<img src="https://github.com/marcoaaz/AcevedoEtAl._2024a_POAM/assets/61703106/5f52711b-aeb7-4e63-82cf-cc703caad5ff" width=60% height=80%>
 
 The scripts and functions documentation are listed below (preliminary descriptions, updated 13-Jan-2024):
 
