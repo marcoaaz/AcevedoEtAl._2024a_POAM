@@ -4,7 +4,7 @@
 
 This repository contains an open-source image analysis pipeline to convert a traditional petrographic (polarising) microscope into a micro-fabric analyser using internal and external software modules. The software is widely documented in Supplementary Material 1 of the submitted manuscript:
 
-**Acevedo Zamora, M. A.; Schrank, C. E.; Kamber, B. S. Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM). ***Journal of Microscopy in revision.*****
+**Acevedo Zamora, M. A., Schrank, C. E., & Kamber, B. S. (2024). Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM). ***Journal of Microscopy in revision.*** https://doi.org/10.1111/jmi.13284**
 
 ## Workflow
 
