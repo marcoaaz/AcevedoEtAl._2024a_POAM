@@ -2,9 +2,13 @@
 
 ## Description
 
-This repository contains an open-source image analysis pipeline to convert a traditional petrographic (polarising) microscope into a micro-fabric analyser using internal and external software modules. The software is widely documented in Supplementary Material 1 of the submitted manuscript:
+This repository contains an open-source image analysis pipeline to convert a traditional petrographic (polarising) microscope into a micro-fabric analyser using internal and external software modules. The software is widely documented in Supplementary Material 1 of the paper:
 
-**Acevedo Zamora, M. A., Schrank, C. E., & Kamber, B. S. (2024). Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM). ***Journal of Microscopy in revision.*** https://doi.org/10.1111/jmi.13284**
+**Acevedo Zamora, M. A., Schrank, C. E., & Kamber, B. S. (2024). Using the traditional microscope for mineral grain orientation determination: a prototype image analysis pipeline for optic axis mapping (POAM): Vol. n/a (Number n/a, p. n/a). ***Journal of Microscopy in revision.*** https://doi.org/10.1111/jmi.13284**
+
+To fully reproduce the results and figures, the reader needs to download the ~50GB dataset from the [Zenodo repository](https://zenodo.org/records/10967340). If using the repository, please, also cite:
+
+**Acevedo Zamora, M. A. (2024). Using the traditional microscope for mineral grain orientation determination: A prototype image analysis pipeline for optic-axis mapping (POAM). Original dataset. [Data set]. In Using the traditional microscope for mineral grain orientation determination: A prototype image analysis pipeline for optic-axis mapping (POAM): Vol. n/a (Number n/a, p. n/a). ***Zenodo.*** https://doi.org/10.5281/zenodo.10967340**
 
 ## Workflow
 
@@ -63,7 +67,6 @@ To be able to run the scripts, you require installing:
 
 ## Future Updates
 
-We expect to increase the efficiency of Algorithm 2 and provide explanatory videos for new users who would like to learn to acquire their images (microscope stage rotation and capturing) and manage the files for effectively use POAM. Feel free to contact me for scientific collaboration.
+We expect to increase the efficiency of Algorithm 2 and provide explanatory videos for new users who would like to learn to acquire their images (microscope stage rotation and capturing) and manage the files for effectively use POAM. POAM should have an implementation in slide scanners and/or upright microscopes with 3d-printed motorised stages. Feel free to contact us for scientific collaboration/funding sources. 
 
-Thanks.
-:) 
+Thank you.
