@@ -10,7 +10,7 @@ To fully reproduce the results and figures, the reader needs to download the ~50
 
 **Acevedo Zamora, M. A. (2024). Using the traditional microscope for mineral grain orientation determination: A prototype image analysis pipeline for optic-axis mapping (POAM). Original dataset. [Data set]. In Using the traditional microscope for mineral grain orientation determination: A prototype image analysis pipeline for optic-axis mapping (POAM): Vol. n/a (Number n/a, p. n/a). ***Zenodo.*** https://doi.org/10.5281/zenodo.10967340**
 
-The whole-slide images that provide context to the studied fields of view can be found in the [virtual microscope]() and accessed using (user ; password): QUTguest_paper3 ; vs200_paper3
+The whole-slide images that provide context to the studied fields of view can be found in the [virtual microscope]() and accessed using (user ; password): QUTrockguest ; QUT23_guest
 
 <img src="https://github.com/marcoaaz/AcevedoEtAl._2024a_POAM/assets/61703106/cbe8f876-c56e-40dd-9e58-8bcd5d092d64" width=80% height=80%>
 
